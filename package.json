@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "node-file-manager",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "npm run start -- --username=your_username"
+    "start": "node ."
   },
   "author": "",
   "license": "ISC"

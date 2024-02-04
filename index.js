@@ -16,65 +16,69 @@ import { cpus } from './scripts/os/cpus.js';
 import { getHomedir } from './scripts/os/homedir.js';
 import { getUsername } from './scripts/os/username.js';
 import { architecture } from './scripts/os/arch.js';
+import { homedir } from 'os';
+import { chdir } from 'process';
 
 export const manageFiles = async () => {
-  const readStream = stdin;
-  const userName = process.argv.filter((arg) => arg.match('username'))[0].split('=')[1];
+  try {
+    const readStream = stdin;
+    const userName = process.argv.filter((arg) => arg.match('username'))[0].split('=')[1];
 
-  console.log(`Welcome to the File Manager, ${userName}`);
-  console.log(`You are currently in ${process.cwd()}`);
-
-  readStream.on('data', async (chunk) => {
-    const data = chunk.toString().trim();
-    const paths = data.split(' ');
-
-    if (data === 'os --EOL') {
-      eol();
-    } else if (data === 'os --cpus') {
-      cpus();
-    } else if (data === 'os --homedir') {
-      getHomedir();
-    } else if (data === 'os --username') {
-      getUsername();
-    } else if (data === 'os --architecture') {
-      architecture();
-    } else if (data.startsWith('hash')) {
-      await hash(paths[1]);
-    } else if (data.startsWith('compress')) {
-      await compress(paths[1], paths[2]);
-    } else if (data.startsWith('decompress')) {
-      await decompress(paths[1], paths[2]);
-    } else if (data === 'up') {
-      await up();
-    } else if (data.startsWith('cd')) {
-      await cd(paths[1]);
-    } else if (data === 'ls') {
-      await ls();
-    } else if (data.startsWith('cat')) {
-      await cat(paths[1]);
-    } else if (data.startsWith('add')) {
-      await add(paths[1]);
-    } else if (data.startsWith('rn')) {
-      await rn(paths[1], paths[2]);
-    } else if (data.startsWith('cp')) {
-      await cp(paths[1], paths[2]);
-    } else if (data.startsWith('mv')) {
-      await mv(paths[1], paths[2]);
-    } else if (data.startsWith('rm')) {
-      await rm(paths[1]);
-    } else if (data === '.exit') {
-      readStream.destroy();
-    } else {
-      console.error('Operation failed');
-    }
+    console.log(`Welcome to the File Manager, ${userName}!`);
+    chdir(homedir());
     console.log(`You are currently in ${process.cwd()}`);
-  });
+    console.log('Enter the command and wait for the result');
 
-  readStream.on('error', () => {
+    readStream.on('data', async (chunk) => {
+      const data = chunk.toString().trim();
+      const paths = data.split(' ');
+
+      if (data === 'os --EOL') {
+        eol();
+      } else if (data === 'os --cpus') {
+        cpus();
+      } else if (data === 'os --homedir') {
+        getHomedir();
+      } else if (data === 'os --username') {
+        getUsername();
+      } else if (data === 'os --architecture') {
+        architecture();
+      } else if (data.startsWith('hash')) {
+        await hash(paths[1]);
+      } else if (data.startsWith('compress')) {
+        await compress(paths[1], paths[2]);
+      } else if (data.startsWith('decompress')) {
+        await decompress(paths[1], paths[2]);
+      } else if (data === 'up') {
+        await up();
+      } else if (data.startsWith('cd')) {
+        await cd(paths[1]);
+      } else if (data === 'ls') {
+        await ls();
+      } else if (data.startsWith('cat')) {
+        await cat(paths[1]);
+      } else if (data.startsWith('add')) {
+        await add(paths[1]);
+      } else if (data.startsWith('rn')) {
+        await rn(paths[1], paths[2]);
+      } else if (data.startsWith('cp')) {
+        await cp(paths[1], paths[2]);
+      } else if (data.startsWith('mv')) {
+        await mv(paths[1], paths[2]);
+      } else if (data.startsWith('rm')) {
+        await rm(paths[1]);
+      } else if (data === '.exit') {
+        readStream.destroy();
+      } else {
+        console.error('Operation failed');
+      }
+      console.log(`You are currently in ${process.cwd()}`);
+    });
+
+    process.on('exit', () => console.log(`Thank you for using File Manager, ${userName}, goodbye!`));
+  } catch {
     console.error('Operation failed');
-  });
-
-  process.on('exit', () => console.log(`Thank you for using File Manager, ${userName}, goodbye!`));
+  }
 };
 
 await manageFiles();

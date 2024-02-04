@@ -1,4 +1,6 @@
 import { ls } from './scripts/nwd/ls.js';
+import { up } from './scripts/nwd/up.js';
+import { cd } from './scripts/nwd/cd.js';
 import { cp } from './scripts/fs/cp.js';
 import { cat } from './scripts/fs/cat.js';
 import { rn } from './scripts/fs/rn.js';
@@ -12,18 +14,27 @@ import { cpus } from './scripts/os/cpus.js';
 import { getHomedir } from './scripts/os/homedir.js';
 import { getUsername } from './scripts/os/username.js';
 import { architecture } from './scripts/os/arch.js';
+import { stdin } from 'process';
 
-// after start
-console.log('Welcome to the File Manager, Username!');
+export const manageFiles = async () => {
+  const readStream = stdin;
+  const userName = process.argv.filter((arg) => arg.match('username'))[0].split('=')[1];
 
-// after each command
-console.log('You are currently in path_to_working_directory');
+  console.log(`Welcome to the File Manager, ${userName}`);
+  console.log(`You are currently in ${process.cwd()}`);
 
-//  before end
-console.log('Thank you for using File Manager, Username, goodbye!');
+  readStream.on('data', (chunk) => {
+    const data = chunk.toString();
+    console.log(data);
+    readStream.destroy();
+    console.log(`You are currently in ${process.cwd()}`);
+  });
 
-eol();
-cpus();
-getHomedir();
-getUsername();
-architecture();
+  readStream.on('error', () => {
+    console.error('Operation failed');
+  });
+
+  process.on('exit', () => console.log(`Thank you for using File Manager, ${userName}, goodbye!`));
+};
+
+await manageFiles();

@@ -11,7 +11,6 @@ export const ls = async () => {
     contentWithTypes.push({ Name: content[i], Type: type });
   }
   const dirs = [];
-  cd;
   const files = [];
   contentWithTypes.forEach((item) => (item.Type === 'directory' ? dirs.push(item) : files.push(item)));
   const result = dirs.sort().concat(files.sort());

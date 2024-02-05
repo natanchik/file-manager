@@ -43,41 +43,41 @@ export const manageFiles = async () => {
         getUsername();
       } else if (data === 'os --architecture') {
         architecture();
-      } else if (data.startsWith('hash')) {
+      } else if (paths[0] === 'hash' && paths.length === 2) {
         await hash(paths[1]);
-      } else if (data.startsWith('compress')) {
+      } else if (paths[0] === 'compress' && paths.length === 3) {
         await compress(paths[1], paths[2]);
-      } else if (data.startsWith('decompress')) {
+      } else if (paths[0] === 'decompress' && paths.length === 3) {
         await decompress(paths[1], paths[2]);
       } else if (data === 'up') {
         await up();
-      } else if (data.startsWith('cd')) {
+      } else if (paths[0] === 'cd' && paths.length === 2) {
         await cd(paths[1]);
       } else if (data === 'ls') {
         await ls();
-      } else if (data.startsWith('cat')) {
+      } else if (paths[0] === 'cat' && paths.length === 2) {
         await cat(paths[1]);
-      } else if (data.startsWith('add')) {
+      } else if (paths[0] === 'add' && paths.length === 2) {
         await add(paths[1]);
-      } else if (data.startsWith('rn')) {
+      } else if (paths[0] === 'rn' && paths.length === 3) {
         await rn(paths[1], paths[2]);
-      } else if (data.startsWith('cp')) {
+      } else if (paths[0] === 'cp' && paths.length === 3) {
         await cp(paths[1], paths[2]);
-      } else if (data.startsWith('mv')) {
+      } else if (paths[0] === 'mv' && paths.length === 3) {
         await mv(paths[1], paths[2]);
-      } else if (data.startsWith('rm')) {
+      } else if (paths[0] === 'rm' && paths.length === 2) {
         await rm(paths[1]);
       } else if (data === '.exit') {
         readStream.destroy();
       } else {
-        console.error('Operation failed');
+        console.error('Invalid input');
       }
-      console.log(`You are currently in ${process.cwd()}`);
+      setTimeout(() => console.log(`You are currently in ${process.cwd()}`), 100);
     });
 
     process.on('exit', () => console.log(`Thank you for using File Manager, ${userName}, goodbye!`));
   } catch {
-    console.error('Operation failed');
+    console.error('Something went wrong...');
   }
 };
 

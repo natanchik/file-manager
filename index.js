@@ -75,6 +75,7 @@ export const manageFiles = async () => {
       setTimeout(() => console.log(`You are currently in ${process.cwd()}`), 100);
     });
 
+    process.on('SIGINT', () => process.exit());
     process.on('exit', () => console.log(`Thank you for using File Manager, ${userName}, goodbye!`));
   } catch {
     console.error('Something went wrong...');

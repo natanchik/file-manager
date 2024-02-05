@@ -6,10 +6,10 @@ import path from 'path';
 export const mv = async (pathToFile, pathToNewDirectory) => {
   try {
     const filename = path.parse(pathToFile).base;
-    const pathToNewFile = path.join(pathToNewDirectory, filename);
+    const pathToNewFile = path.join(path.normalize(pathToNewDirectory), filename);
 
     await pipeline(createReadStream(pathToFile), createWriteStream(pathToNewFile));
-    await rm(pathToFile);
+    await rm(path.normalize(pathToFile));
   } catch {
     console.error('Operation failed');
   }

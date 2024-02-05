@@ -1,11 +1,13 @@
-import { copyFile } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
+import { pipeline } from 'node:stream/promises';
 import path from 'path';
 
 export const cp = async (pathToFile, pathToNewDirectory) => {
-  const filename = path.parse(pathToFile).base;
-  const pathToNewFile = path.join(pathToNewDirectory, filename);
-
-  return copyFile(pathToFile, pathToNewFile, (err) => {
-    if (err) console.error('Operation failed');
-  });
+  try {
+    const filename = path.parse(pathToFile).base;
+    const pathToNewFile = path.join(pathToNewDirectory, filename);
+    await pipeline(createReadStream(pathToFile), createWriteStream(pathToNewFile));
+  } catch {
+    console.error('Operation failed');
+  }
 };
